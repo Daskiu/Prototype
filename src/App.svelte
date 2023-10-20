@@ -4,6 +4,22 @@
 	let rows =[];
 	let score = 0;
 	let gameover = false;
+	let timer;
+	let timeLimit = 1000;
+
+	function startGame() {
+  		fillRows();
+  		startTimer();
+	}
+
+	function startTimer() {
+  		timer = setTimeout(gameOver, timeLimit);
+	}
+
+	function gameOver() {
+  		gameover = true;
+  		clearTimeout(timer);
+	}
 
 	function generateRow(){
 		let row = new Array(4).fill("white");
@@ -26,6 +42,8 @@
 			rows.splice(i);
 			rows = [generateRow(), ...rows];
 			score++;
+			clearTimeout(timer);
+			startTimer();
 		}
 	}
 
@@ -37,6 +55,7 @@
 	}
 
 	fillRows();
+	startGame();
 </script>
 
 <style>
