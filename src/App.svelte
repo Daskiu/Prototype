@@ -5,20 +5,21 @@
 	let score = 0;
 	let gameover = false;
 	let timer;
-	let timeLimit = 1000;
+	let timeLimit = 10000;
 
 	function startGame() {
-  		fillRows();
+		fillRows();
   		startTimer();
 	}
 
 	function startTimer() {
   		timer = setTimeout(gameOver, timeLimit);
+		console.log("iniciar");
 	}
 
 	function gameOver() {
   		gameover = true;
-  		clearTimeout(timer);
+		clearTimeout(timer);
 	}
 
 	function generateRow(){
@@ -42,8 +43,6 @@
 			rows.splice(i);
 			rows = [generateRow(), ...rows];
 			score++;
-			clearTimeout(timer);
-			startTimer();
 		}
 	}
 
@@ -51,11 +50,11 @@
 		score = 0;
 		gameover = false;
 		rows = [];
-		fillRows();
+		startGame();
 	}
 
-	fillRows();
 	startGame();
+
 </script>
 
 <style>
