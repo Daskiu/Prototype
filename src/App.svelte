@@ -7,6 +7,9 @@
 	let timer;
 	let timeLimit = 10000;
 
+	const backgroundMusic = document.getElementById("backgroundMusic");
+  	backgroundMusic.volume = 0.1;
+
 	function startGame() {
 		fillRows();
   		startTimer();
@@ -14,12 +17,13 @@
 
 	function startTimer() {
   		timer = setTimeout(gameOver, timeLimit);
-		console.log("iniciar");
 	}
 
 	function gameOver() {
   		gameover = true;
 		clearTimeout(timer);
+		const backgroundMusic = document.getElementById("backgroundMusic");
+ 		backgroundMusic.pause();
 	}
 
 	function generateRow(){
@@ -38,6 +42,7 @@
 	function tapped(i,j){
 		if(i != rows.length - 1 || rows[i][j] == "white"){
 			gameover = true;
+			gameOver();
 			rows[i][j] = "red";
 		} else {
 			rows.splice(i);
@@ -46,11 +51,19 @@
 		}
 	}
 
+	function changeVolume(event) {
+    	const backgroundMusic = document.getElementById("backgroundMusic");
+    	backgroundMusic.volume = parseFloat(event.target.value);
+	}
+
 	function restart(){
 		score = 0;
 		gameover = false;
 		rows = [];
 		startGame();
+		const backgroundMusic = document.getElementById("backgroundMusic");
+		backgroundMusic.currentTime = 0;
+		backgroundMusic.play();
 	}
 
 	startGame();
@@ -152,12 +165,40 @@
 		font-weight: 600;
 		background: transparent;
 	}
+
+	#volumeControl {
+  		width: 100px;
+  		height: 5px;
+  		-webkit-appearance: none;
+  		background: #d3d3d3;
+  		outline: none;
+  		opacity: 0.7;
+  		-webkit-transition: .2s;
+  		transition: opacity .2s;
+  		margin-top: 10px;
+	}
+
+	#volumeControl::-webkit-slider-thumb {
+  		-webkit-appearance: none;
+  		appearance: none;
+  		width: 15px;
+  		height: 15px;
+  		background: #4CAF50;
+  		cursor: pointer;
+  		border-radius: 50%;
+  		border: 2px #000;
+	}
+
+	#volumeControl:hover::-webkit-slider-thumb {
+  		background: #0b9737;
+	}
 </style>
 
 <main class="app">
 	<div class="header">
 		<h4>Play With Me</h4>
 		<p>Score: {score}</p>
+    	<input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" on:input={changeVolume}>
 	</div>
 	<div class="game">
 		{#each rows as row, i}
