@@ -79,6 +79,23 @@ var app = (function () {
     function set_current_component(component) {
         current_component = component;
     }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error('Function called outside component initialization');
+        return current_component;
+    }
+    /**
+     * The `onMount` function schedules a callback to run as soon as the component has been mounted to the DOM.
+     * It must be called during the component's initialisation (but doesn't need to live *inside* the component;
+     * it can be called from an external module).
+     *
+     * `onMount` does not run inside a [server-side component](/docs#run-time-server-side-component-api).
+     *
+     * https://svelte.dev/docs#run-time-svelte-onmount
+     */
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
+    }
 
     const dirty_components = [];
     const binding_callbacks = [];
@@ -417,19 +434,19 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[13] = list[i];
-    	child_ctx[15] = i;
-    	return child_ctx;
-    }
-
-    function get_each_context_1(ctx, list, i) {
-    	const child_ctx = ctx.slice();
     	child_ctx[16] = list[i];
     	child_ctx[18] = i;
     	return child_ctx;
     }
 
-    // (206:4) {#each row as box, j}
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[19] = list[i];
+    	child_ctx[21] = i;
+    	return child_ctx;
+    }
+
+    // (227:4) {#each row as box, j}
     function create_each_block_1(ctx) {
     	let div;
     	let div_class_value;
@@ -437,14 +454,14 @@ var app = (function () {
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[5](/*i*/ ctx[15], /*j*/ ctx[18]);
+    		return /*click_handler*/ ctx[5](/*i*/ ctx[18], /*j*/ ctx[21]);
     	}
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", div_class_value = "" + (null_to_empty("box " + /*box*/ ctx[16]) + " svelte-qgnwgp"));
-    			add_location(div, file, 206, 5, 3651);
+    			attr_dev(div, "class", div_class_value = "" + (null_to_empty("box " + /*box*/ ctx[19]) + " svelte-qgnwgp"));
+    			add_location(div, file, 227, 5, 4103);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -457,7 +474,7 @@ var app = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*rows*/ 1 && div_class_value !== (div_class_value = "" + (null_to_empty("box " + /*box*/ ctx[16]) + " svelte-qgnwgp"))) {
+    			if (dirty & /*rows*/ 1 && div_class_value !== (div_class_value = "" + (null_to_empty("box " + /*box*/ ctx[19]) + " svelte-qgnwgp"))) {
     				attr_dev(div, "class", div_class_value);
     			}
     		},
@@ -472,18 +489,18 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(206:4) {#each row as box, j}",
+    		source: "(227:4) {#each row as box, j}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (204:2) {#each rows as row, i}
+    // (225:2) {#each rows as row, i}
     function create_each_block(ctx) {
     	let div;
     	let t;
-    	let each_value_1 = /*row*/ ctx[13];
+    	let each_value_1 = /*row*/ ctx[16];
     	validate_each_argument(each_value_1);
     	let each_blocks = [];
 
@@ -501,7 +518,7 @@ var app = (function () {
 
     			t = space();
     			attr_dev(div, "class", "row svelte-qgnwgp");
-    			add_location(div, file, 204, 3, 3602);
+    			add_location(div, file, 225, 3, 4054);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -516,7 +533,7 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*rows, tapped*/ 9) {
-    				each_value_1 = /*row*/ ctx[13];
+    				each_value_1 = /*row*/ ctx[16];
     				validate_each_argument(each_value_1);
     				let i;
 
@@ -549,14 +566,14 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(204:2) {#each rows as row, i}",
+    		source: "(225:2) {#each rows as row, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (215:1) {#if gameover}
+    // (236:1) {#if gameover}
     function create_if_block(ctx) {
     	let div;
     	let h2;
@@ -582,13 +599,14 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Restart";
     			attr_dev(h2, "class", "svelte-qgnwgp");
-    			add_location(h2, file, 216, 3, 3809);
+    			add_location(h2, file, 237, 3, 4261);
     			attr_dev(p, "class", "svelte-qgnwgp");
-    			add_location(p, file, 217, 3, 3831);
+    			add_location(p, file, 238, 3, 4283);
+    			attr_dev(button, "id", "restartButton");
     			attr_dev(button, "class", "svelte-qgnwgp");
-    			add_location(button, file, 218, 3, 3856);
+    			add_location(button, file, 239, 3, 4308);
     			attr_dev(div, "class", "result svelte-qgnwgp");
-    			add_location(div, file, 215, 2, 3785);
+    			add_location(div, file, 236, 2, 4237);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -619,7 +637,7 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(215:1) {#if gameover}",
+    		source: "(236:1) {#if gameover}",
     		ctx
     	});
 
@@ -672,8 +690,8 @@ var app = (function () {
 
     			t6 = space();
     			if (if_block) if_block.c();
-    			add_location(h4, file, 198, 2, 3392);
-    			add_location(p, file, 199, 2, 3416);
+    			add_location(h4, file, 219, 2, 3844);
+    			add_location(p, file, 220, 2, 3868);
     			attr_dev(input, "type", "range");
     			attr_dev(input, "id", "volumeControl");
     			attr_dev(input, "min", "0");
@@ -681,13 +699,13 @@ var app = (function () {
     			attr_dev(input, "step", "0.1");
     			input.value = "0.5";
     			attr_dev(input, "class", "svelte-qgnwgp");
-    			add_location(input, file, 200, 5, 3443);
+    			add_location(input, file, 221, 5, 3895);
     			attr_dev(div0, "class", "header svelte-qgnwgp");
-    			add_location(div0, file, 197, 1, 3369);
+    			add_location(div0, file, 218, 1, 3821);
     			attr_dev(div1, "class", "game svelte-qgnwgp");
-    			add_location(div1, file, 202, 1, 3555);
+    			add_location(div1, file, 223, 1, 4007);
     			attr_dev(main, "class", "app svelte-qgnwgp");
-    			add_location(main, file, 196, 0, 3349);
+    			add_location(main, file, 217, 0, 3801);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -801,8 +819,14 @@ var app = (function () {
     	let gameover = false;
     	let timer;
     	let timeLimit = 10000;
+    	let validKeys = ['q', 'w', 'e', 'r'];
     	const backgroundMusic = document.getElementById("backgroundMusic");
     	backgroundMusic.volume = 0.1;
+
+    	onMount(() => {
+    		window.addEventListener("keydown", handleKeyPress);
+    		startGame();
+    	});
 
     	function startGame() {
     		fillRows();
@@ -824,6 +848,21 @@ var app = (function () {
     		for (let i = 0; i < 4; i++) {
     			rows.push(generateRow());
     		}
+    	}
+
+    	function handleKeyPress(event) {
+    		if (!gameover) {
+    			const key = event.key.toLowerCase();
+
+    			if (validKeys.includes(key)) {
+    				const column = getKeyColumn(key);
+    				tapped(rows.length - 1, column);
+    			}
+    		}
+    	}
+
+    	function getKeyColumn(key) {
+    		return validKeys.indexOf(key);
     	}
 
     	function tapped(i, j) {
@@ -859,17 +898,21 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		each,
+    		onMount,
     		rows,
     		score,
     		gameover,
     		timer,
     		timeLimit,
+    		validKeys,
     		backgroundMusic,
     		startGame,
     		startTimer,
     		gameOver,
     		generateRow,
     		fillRows,
+    		handleKeyPress,
+    		getKeyColumn,
     		tapped,
     		changeVolume,
     		restart
@@ -881,6 +924,7 @@ var app = (function () {
     		if ('gameover' in $$props) $$invalidate(2, gameover = $$props.gameover);
     		if ('timer' in $$props) timer = $$props.timer;
     		if ('timeLimit' in $$props) timeLimit = $$props.timeLimit;
+    		if ('validKeys' in $$props) validKeys = $$props.validKeys;
     	};
 
     	if ($$props && "$$inject" in $$props) {

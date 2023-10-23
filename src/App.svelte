@@ -1,14 +1,21 @@
 <script>
   import { each } from "svelte/internal";
+  import { onMount } from "svelte/internal";
 
 	let rows =[];
 	let score = 0;
 	let gameover = false;
 	let timer;
 	let timeLimit = 10000;
+	let validKeys = ['q', 'w', 'e', 'r'];
 
 	const backgroundMusic = document.getElementById("backgroundMusic");
   	backgroundMusic.volume = 0.1;
+
+	onMount(()=>{
+		window.addEventListener("keydown", handleKeyPress);
+		startGame();
+	});
 
 	function startGame() {
 		fillRows();
@@ -37,6 +44,20 @@
 		for(let i=0; i<4; i++){
 			rows.push(generateRow());
 		}
+	}
+
+	function handleKeyPress(event){
+		if (!gameover) {
+			const key = event.key.toLowerCase();
+			if (validKeys.includes(key)){
+				const column = getKeyColumn(key);
+				tapped(rows.length - 1, column)
+			}
+		}
+	}
+
+	function getKeyColumn(key){
+		return validKeys.indexOf(key);
 	}
 
 	function tapped(i,j){
@@ -216,7 +237,7 @@
 		<div class="result">
 			<h2>Game Over</h2>
 			<p>Score: {score}</p>
-			<button on:click={restart}>Restart</button>
+			<button id="restartButton" on:click={restart}>Restart</button>
 		</div>
 	{/if}
 </main>
