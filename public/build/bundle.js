@@ -818,7 +818,7 @@ var app = (function () {
     	let score = 0;
     	let gameover = false;
     	let timer;
-    	let timeLimit = 10000;
+    	let timeLimit = 30000;
     	let validKeys = ['q', 'w', 'e', 'r'];
     	const backgroundMusic = document.getElementById("backgroundMusic");
     	backgroundMusic.volume = 0.1;

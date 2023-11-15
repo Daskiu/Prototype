@@ -1,21 +1,51 @@
 <script>
   import { each } from "svelte/internal";
-  import { onMount } from "svelte/internal";
+  import { onMount, onDestroy } from "svelte/internal";
+  import SerialPort from "serialport";
 
 	let rows =[];
 	let score = 0;
 	let gameover = false;
 	let timer;
-	let timeLimit = 10000;
+	let timeLimit = 30000;
 	let validKeys = ['q', 'w', 'e', 'r'];
 
 	const backgroundMusic = document.getElementById("backgroundMusic");
   	backgroundMusic.volume = 0.1;
 
+	let serialPort;
+
 	onMount(()=>{
+		connectToArduino();
 		window.addEventListener("keydown", handleKeyPress);
 		startGame();
 	});
+
+	onDestroy(() => {
+		if (serialPort) {
+			serialPort.close();
+		}
+	});
+
+	function connectToArduino() {
+    const portName = "COM3";
+    serialPort = new SerialPort(portName, {
+      baudRate: 9600,
+    });
+
+    serialPort.on("open", () => {
+      console.log("Conectado al Arduino");
+    });
+
+    serialPort.on("data", (data) => {
+      const key = data.toString().trim().toLowerCase();
+      if (validKeys.includes(key)) {
+        const column = getKeyColumn(key);
+        tapped(rows.length - 1, column);
+      }
+    });
+	
+	}
 
 	function startGame() {
 		fillRows();
